@@ -24,15 +24,16 @@ class DatabaseService {
   }
 
   Future<void> _onCreate(Database db, int version) async {
-    // TODO: Create tables for the fitness app
-    // Example:
-    // await db.execute('''
-    //   CREATE TABLE workouts (
-    //     id INTEGER PRIMARY KEY AUTO INCREMENT,
-    //     name TEXT,
-    //     date TEXT
-    //   )
-    // ''');
+    await db.execute('''
+      CREATE TABLE exercises (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL,
+        muscleGroup TEXT NOT NULL,
+        equipment TEXT NOT NULL,
+        instructions TEXT NOT NULL
+      )
+    ''');
   }
 }
 

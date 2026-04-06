@@ -22,16 +22,18 @@ To optimize performance and maintainability, a dual-engine approach is utilized:
 *   **Local Persistence:** SQLite (`sqflite`)
 
 ## 3. Current Project Status (The "Now")
-**Phase:** **Bootstrap Phase Complete.**
+**Phase:** **Phase 1 (Native Data Ingestion) Complete.**
 
 **Achievements:**
 *   [x] Project initialization and environment configuration.
 *   [x] Implementation of Clean Architecture folder structure.
-*   [x] Configuration of tiered state management dependencies (Riverpod + Signals).
+*   [x] Configuration of tiered state management dependencies (Rivertro + Signals).
 *   [x] Foundation of the `DatabaseService` for persistent local storage.
+*   [x] Implementation of a type-safe Domain Layer for Exercises.
+*   [x] Development of a native Dart Ingestion Engine for JSON/CSV data.
+*   [x] Implementation of the Exercise Repository for SQLite persistence.
 
 ## 4. Development Roadmap (The "Future")
-*   **Phase 1: Data Ingestion:** Implementation of parsers for open-source exercise databases and development of robust SQLite migration logic.
 *   **Phase 2: LLM Integration:** Integration of the local Gemma inference engine via `llamadart` to enable intelligent, context-aware coaching.
 *   **Phase 3: Reactive UI Development:** Construction of advanced active workout and session screens, leveraging the Signals-based surgical rendering pattern for peak performance.
 *   **Phase 4: [Placeholder for future expansion]**

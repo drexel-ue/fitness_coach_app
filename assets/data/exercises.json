@@ -1,0 +1,28 @@
+[
+  {
+    "id": "1",
+    "name": "Bench Press",
+    "description": "A classic compound exercise for chest development.",
+    "muscleGroup": "chest",
+    "equipment": "barbell",
+    "instructions": [
+      "Lie on a flat bench.",
+      "Grip the barbell with hands slightly wider than shoulder-width.",
+      "Lower the bar to your mid-chest.",
+      "Press the bar back up to the starting position."
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Bicep Curl",
+    "description": "An isolation exercise for the biceps.",
+    "muscleGroup": "arms",
+    "equipment": "dumbbell",
+    "instructions": [
+      "Hold a dumbbell in each hand, palms facing forward.",
+      "Keep your elbows close to your torso.",
+      "Curl the weights while contracting your biceps.",
+      "Lower the weights slowly."
+    ]
+  }
+]
