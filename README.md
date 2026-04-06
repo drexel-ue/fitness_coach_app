@@ -1,16 +1,42 @@
-# fitness_coach_app
+# Project Ledger: Fitness Coach App
 
-A new Flutter project.
+## 1. Project Vision & Core Objective
+**Summary:** A privacy-first, local-LLM-powered fitness coaching application designed for complete user autonomy.
+**Core Value:** Delivering personalized, offline-capable coaching that evolves alongside the user's physical progress, without ever compromising data privacy.
 
-## Getting Started
+## 2. Technical Manifesto (The "How")
+### Architecture
+The project adheres to **Clean Architecture** principles, strictly separating concerns into three distinct layers:
+*   **Data Layer:** Handles data retrieval, persistence (SQLite), and external API interactions.
+*   **Domain Layer:** Contains the core business logic, entities, and use cases, remaining agnostic of external frameworks.
+*   **Presentation Layer:** Manages the user interface and user interaction, implementing the tiered state management strategy.
 
-This project is a starting point for a Flutter application.
+### Tiered State Management Strategy
+To optimize performance and maintainability, a dual-engine approach is utilized:
+*   **Global Engine (Riverpod):** Serves as the backbone for Dependency Injection (DI), SQLite database orchestration, and complex business logic/repository management. It handles the "source of truth" for the application state.
+*   **High-Frequency UI (Signals):** Utilized for **"Surgical Rendering."** This is applied to real-time, high-frequency UI elements—such as active workout timers, rep counters, and weight trackers—to ensure maximum frame rates and minimal UI rebuild overhead.
 
-A few resources to get you started if this is your first Flutter project:
+### Primary Stack
+*   **Framework:** Flutter (Dart)
+*   **Inference Engine:** `llamadart` (running Gemma)
+*   **Local Persistence:** SQLite (`sqflite`)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 3. Current Project Status (The "Now")
+**Phase:** **Bootstrap Phase Complete.**
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Achievements:**
+*   [x] Project initialization and environment configuration.
+*   [x] Implementation of Clean Architecture folder structure.
+*   [x] Configuration of tiered state management dependencies (Riverpod + Signals).
+*   [x] Foundation of the `DatabaseService` for persistent local storage.
+
+## 4. Development Roadmap (The "Future")
+*   **Phase 1: Data Ingestion:** Implementation of parsers for open-source exercise databases and development of robust SQLite migration logic.
+*   **Phase 2: LLM Integration:** Integration of the local Gemma inference engine via `llamadart` to enable intelligent, context-aware coaching.
+*   **Phase 3: Reactive UI Development:** Construction of advanced active workout and session screens, leveraging the Signals-based surgical rendering pattern for peak performance.
+*   **Phase 4: [Placeholder for future expansion]**
+
+## 5. Engineering Principles
+1.  **Rule 1: Prioritize Surgical Rendering.** In the presentation layer, all high-frequency UI updates must utilize the Signals pattern to prevent unnecessary widget rebuilds.
+2.  **Rule 2: Strict Layered Separation.** Maintain an impenetrable boundary between the Data and Domain layers; the Domain layer must never depend on implementation details of the Data layer.
+3.  **Rule 3: Schema Integrity.** All user-generated or imported exercises must strictly adhere to the established database schema to ensure seamless compatibility with the LLM-driven coaching engine.
