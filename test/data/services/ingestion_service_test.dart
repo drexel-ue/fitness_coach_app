@@ -38,13 +38,15 @@ void main() {
   test('IngestionService should successfully ingest exercises from asset', () async {
     final databaseService = container.read(databaseServiceProvider);
     final repository = container.read(exerciseRepositoryProvider);
-    final ingestionService = container.read(ingestionServiceProvider);
+    final ingestionService = IngestionService(
+      repository,
+    );
 
     // Ensure database is initialized
     await databaseService.database;
 
     // Run ingestion
-    await ingestionService.ingestExercisesFromAsset('assets/data/exercises.json');
+    ingestionService.ingestExercisesFromAsset('assets/data/exercises.json');
 
     // Verify exercises are in the database
     final allExercises = await repository.getAllExercises();

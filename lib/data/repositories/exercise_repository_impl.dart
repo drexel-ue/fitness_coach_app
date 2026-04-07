@@ -33,7 +33,7 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
     final db = await _databaseService.database;
     final List<Map<String, dynamic>> maps = await db.query(
       'exercises',
-      where: 'muscleGroup = ?',
+      where: 'primaryMuscleGroup = ?',
       whereArgs: [group.name],
     );
     return List.generate(maps.length, (i) {
@@ -62,6 +62,45 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  @override
+  Future<List<Exercise>> getExercisesBySource(ExerciseSource source) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'exercises',
+      where: 'source = ?',
+      whereArgs: [source.name],
+    );
+    return List.generate(maps.length, (i) {
+      return Exercise.fromJson(maps[i]);
+    });
+  }
+
+  @override
+  Future<List<Exercise>> getExercisesByForce(Force force) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'exercises',
+      where: 'force = ?',
+      whereArgs: [force.name],
+    );
+    return List.generate(maps.length, (i) {
+      return Exercise.fromJson(maps[i]);
+    });
+  }
+
+  @override
+  Future<List<Exercise>> getExercisesByLevel(ExerciseLevel level) async {
+    final db = await _databaseService.database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'exercises',
+      where: 'level = ?',
+      whereArgs: [level.name],
+    );
+    return List.generate(maps.length, (i) {
+      return Exercise.fromJson(maps[i]);
+    });
   }
 }
 
