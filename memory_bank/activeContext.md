@@ -1,6 +1,13 @@
-# Application Vision
+# Fitness Coach App Vision
 
-- **Uni-directional Flow Architecture**: All state transitions follow a single direction (e.g., user input → state update → UI refresh), ensuring predictable behavior and easier debugging.
-- **Multi-modal Interaction**: Seamless integration of text-to-voice and voice-to-text features using local STT/TTS, preserving context across modalities (e.g., voice commands during workout sessions).
-- **Extensibility**: Modular design with clear interfaces (e.g., `ExerciseRepository` interface) to allow future integration of computer vision for form analysis without major refactoring.
-- **Performance**: Use of Isolates for data processing exceeding 8ms to prevent UI jank during workout tracking or video analysis.
+**Core Principles:**
+- **Local-First:** All data sources (e.g., `free-exercise-db JSON`) are local, ensuring privacy and offline capability. Cloud sync is optional and documented.
+- **Multi-Modal Interaction:** Seamlessly integrate text-to-voice and voice-to-text using local packages (`speech_to_text`, `flutter_tts`), preserving state across modalities.
+- **LLM Integration:** Utilize `llamadart` for local LLM capabilities, with `inference_service.dart` designed for future extensibility (e.g., computer vision via clear interfaces).
+- **Architecture:** Follow unidirectional data flow; ensure reactive streams in `DatabaseService` and `ExerciseRepository`.
+
+**Key Implementation Path:**
+1. Complete local-first data layer (using `free-exercise-db`)
+2. Integrate `llamadart` into `inference_service.dart`
+3. Implement reactive streams for database/repository
+4. Verify end-to-end ingestion flow
