@@ -1,0 +1,67 @@
+[
+  {
+    "id": "test_001",
+    "name": "Test Bench Press",
+    "force": "push",
+    "level": "beginner",
+    "mechanic": "compound",
+    "equipment": "barbell",
+    "primaryMuscles": ["chest"],
+    "secondaryMuscles": ["triceps", "shoulders"],
+    "instructions": ["Lie on bench", "Lower bar to chest", "Press up"],
+    "category": "strength",
+    "images": ["bench_press.jpg"]
+  },
+  {
+    "id": "test_002",
+    "name": "Test Dumbbell Curl",
+    "force": "pull",
+    "level": "intermediate",
+    "mechanic": "isolation",
+    "equipment": "dumbbell",
+    "primaryMuscles": ["biceps"],
+    "secondaryMuscles": [],
+    "instructions": ["Stand with dumbbells", "Curl up", "Lower slowly"],
+    "category": "strength",
+    "images": ["dumbbell_curl.jpg"]
+  },
+  {
+    "id": "test_003",
+    "name": "Test Squat",
+    "force": "push",
+    "level": "expert",
+    "mechanic": "compound",
+    "equipment": "barbell",
+    "primaryMuscles": ["quadriceps"],
+    "secondaryMuscles": ["glutes", "hamstrings", "calves"],
+    "instructions": ["Stand with barbell", "Lower into squat", "Drive up"],
+    "category": "powerlifting",
+    "images": ["squat.jpg"]
+  },
+  {
+    "id": "test_004",
+    "name": "Test Plank",
+    "force": "static",
+    "level": "beginner",
+    "mechanic": "isolation",
+    "equipment": "bodyweight",
+    "primaryMuscles": ["abs"],
+    "secondaryMuscles": ["core"],
+    "instructions": ["Hold forearm plank position", "Keep body straight", "Hold for time"],
+    "category": "stretching",
+    "images": ["plank.jpg"]
+  },
+  {
+    "id": "test_005",
+    "name": "Test Exercise with Empty Fields",
+    "force": null,
+    "level": null,
+    "mechanic": null,
+    "equipment": null,
+    "primaryMuscles": [],
+    "secondaryMuscles": [],
+    "instructions": [],
+    "category": null,
+    "images": []
+  }
+]

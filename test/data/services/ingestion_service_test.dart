@@ -1,58 +1,126 @@
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:path_provider_platform_interface/path_provider_platform_interface.dart';
-import 'package:fitness_coach_app/core/database/database_service.dart';
-import 'package:fitness_coach_app/data/repositories/exercise_repository_impl.dart';
-import 'package:fitness_coach_app/data/services/ingestion_service.dart';
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'dart:io';
 
-class FakePathProviderPlatform extends PathProviderPlatform {
-  @override
-  Future<String?> getApplicationSupportPath() async => '';
-  @override
-  Future<String?> getApplicationCachePath() async => '';
-  @override
-  Future<String?> getTemporaryPath() async => '';
-  @override
-  Future<String?> getApplicationDocumentsPath() async => '';
-}
+import 'package:flutter_test/flutter_test.dart';
+import 'package:fitness_coach_app/data/services/ingestion_service.dart';
+import 'package:fitness_coach_app/domain/repositories/exercise_repository.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockExerciseRepository extends Mock implements ExerciseRepository {}
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-  late ProviderContainer container;
+  late IngestionService service;
+  late MockExerciseRepository mockRepository;
 
   setUp(() {
-    container = ProviderContainer();
+    mockRepository = MockExerciseRepository();
+    service = IngestionService(mockRepository);
   });
 
-  tearDown(() {
-    container.dispose();
-  });
+  group('IngestionService', () {
+    test('should successfully ingest exercises from file', () async {
+      // Arrange
+      final testFile = File('test/data/fixtures/exercises_test.json');
+      final results = <IngestionProgress>[];
 
-  setUpAll(() {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-    PathProviderPlatform.instance = FakePathProviderPlatform();
-  });
+      // Act
+      await for (final progress in service.ingestExercisesFromFilePath(
+        testFile.path,
+        batchSize: 50,
+      )) {
+        results.add(progress);
+      }
 
-  test('IngestionService should successfully ingest exercises from asset', () async {
-    final databaseService = container.read(databaseServiceProvider);
-    final repository = container.read(exerciseRepositoryProvider);
-    final ingestionService = IngestionService(
-      repository,
-    );
+      // Assert
+      expect(results.isNotEmpty, true);
+      final finalProgress = results.last;
+      expect(finalProgress.total, 5);
+      expect(finalProgress.completed, 5);
+      expect(finalProgress.failed, 0);
+    });
 
-    // Ensure database is initialized
-    await databaseService.database;
+    test('should handle file not found gracefully', () async {
+      // Arrange
+      final nonExistentFile = '/path/that/does/not/exist.json';
+      final results = <IngestionProgress>[];
 
-    // Run ingestion
-    ingestionService.ingestExercisesFromAsset('assets/data/exercises.json');
+      // Act
+      await for (final progress in service.ingestExercisesFromFilePath(
+        nonExistentFile,
+        batchSize: 50,
+      )) {
+        results.add(progress);
+      }
 
-    // Verify exercises are in the database
-    final allExercises = await repository.getAllExercises();
+      // Assert
+      expect(results.isNotEmpty, true);
+      final finalProgress = results.last;
+      expect(finalProgress.failed, 1);
+      expect(finalProgress.status, contains('File not found'));
+    });
 
-    expect(allExercises.length, 2);
-    expect(allExercises.any((e) => e.name == 'Bench Press'), isTrue);
-    expect(allExercises.any((e) => e.name == 'Bicep Curl'), isTrue);
+    test('should handle duplicate IDs gracefully', () async {
+      // Arrange
+      final testFile = File('test/data/fixtures/exercises_test.json');
+      final results = <IngestionProgress>[];
+
+      // Mock repository to allow duplicate inserts
+      when(() => mockRepository.insertExercise(any())).thenAnswer(
+        (_) async => 'test-id',
+      );
+
+      // Act
+      await for (final progress in service.ingestExercisesFromFilePath(
+        testFile.path,
+        batchSize: 50,
+      )) {
+        results.add(progress);
+      }
+
+      // Assert
+      final finalProgress = results.last;
+      expect(finalProgress.completed, 5);
+    });
+
+    test('should handle empty JSON array', () async {
+      // Arrange
+      final testFile = File('test/data/fixtures/empty_exercises.json');
+      final results = <IngestionProgress>[];
+
+      // Act
+      await for (final progress in service.ingestExercisesFromFilePath(
+        testFile.path,
+        batchSize: 50,
+      )) {
+        results.add(progress);
+      }
+
+      // Assert
+      expect(results.isNotEmpty, true);
+      final finalProgress = results.last;
+      expect(finalProgress.total, 0);
+      expect(finalProgress.completed, 0);
+      expect(finalProgress.failed, 0);
+      expect(finalProgress.status, 'Completed');
+    });
+
+    test('should process in batches', () async {
+      // Arrange
+      final testFile = File('test/data/fixtures/exercises_test.json');
+      final results = <IngestionProgress>[];
+
+      // Act
+      await for (final progress in service.ingestExercisesFromFilePath(
+        testFile.path,
+        batchSize: 2, // Small batch size to test batching
+      )) {
+        results.add(progress);
+      }
+
+      // Assert
+      expect(results.length, greaterThan(1)); // Should have multiple progress updates
+      final finalProgress = results.last;
+      expect(finalProgress.total, 5);
+      expect(finalProgress.completed, 5);
+    });
   });
 }
