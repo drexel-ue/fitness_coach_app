@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fitness_coach_app/domain/entities/exercise.dart';
 import 'package:fitness_coach_app/data/dtos/exercise_dto.dart';
-import 'package:fitness_coach_app/domain/repositories/exercise_repository.dart';
 import 'package:fitness_coach_app/domain/services/ingestion_service.dart';
 import 'package:fitness_coach_app/usecases/ingestion_usecase.dart';
 import 'package:mocktail/mocktail.dart';

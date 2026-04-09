@@ -20,7 +20,7 @@ The project follows Clean Architecture principles with clear separation of conce
 │      Data       │  (DTOs, Repositories, Services)
 ├─────────────────┤
 │      Core       │  (Database, Extensions)
-└─────────────────┘
+└──-──────────────┘
 ```
 
 ### 2. Repository Pattern
@@ -51,7 +51,7 @@ class ExerciseDTO {
   final String name;
   final String? force;
   // ...
-  
+
   // Conversion method
   Exercise toEntity({
     ExerciseSource source = ExerciseSource.ingestion,
@@ -68,22 +68,14 @@ Each use case represents a single business rule:
 ```dart
 class IngestionUseCase {
   final IngestionService _ingestionService;
-  final ExerciseRepository _exerciseRepository;
-  
-  // Dev flow: ingest from bundled asset
-  Future<Stream<IngestionProgress>> ingestFromAsset();
-  
-  // User flow: ingest from remote URL
-  Future<Stream<IngestionProgress>> ingestFromRemote(String url);
-  
-  // Check for updates
-  Future<bool> checkForUpdates();
-  
-  // Import only new exercises
-  Future<Stream<IngestionProgress>> importNewExercisesOnly();
-  
-  // Query ingestion source exercises
-  Future<List<Exercise>> getIngestionExercises();
+
+  Stream<IngestionProgress> ingestFromAsset(String assetPath, {int batchSize = 50});
+  Stream<IngestionProgress> ingestFromFile(String filePath, {int batchSize = 50});
+  Stream<IngestionProgress> ingestFromUrl(String url, {int batchSize = 50});
+  Stream<IngestionProgress> ingestFromFreeExerciseDb({int batchSize = 50});
+  Stream<IngestionProgress> ingestFromDtoList(List<ExerciseDTO> dtos, {int batchSize = 50});
+  Future<String?> fetchAndCacheImage(String url, String exerciseId);
+  Future<Map<String, String?>> prefetchImages(List<Exercise> exercises);
 }
 ```
 
@@ -97,7 +89,7 @@ class IngestionProgress {
   final int skipped;
   final int failed;
   final String? errorMessage;
-  
+
   double get progress => total == 0 ? 0.0 : processed / total;
 }
 ```

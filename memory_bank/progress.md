@@ -28,20 +28,18 @@
 ---
 
 ## Phase 2: Unit Tests (IN PROGRESS)
-**Date:** 4/7/2026
+**Date:** 4/9/2026
 **Status:** 🔄 In Progress
 
 ### Completed Tests:
 - [x] InferenceService tests (test/services/inference_service_test.dart)
-- [ ] Exercise unit tests
-- [ ] ExerciseDTO unit tests
-- [ ] IngestionService unit tests (test/data/services/ingestion_service_test.dart - partial)
-- [ ] IngestionUseCase unit tests
+- [x] Exercise unit tests
+- [x] ExerciseDTO unit tests
+- [x] IngestionService unit tests (test/data/services/ingestion_service_test.dart)
+- [x] IngestionUseCase unit tests (test/usecases/ingestion_usecase_test.dart)
 
 ### Files to Create:
-- `test/domain/entities/exercise_test.dart`
-- `test/data/dtos/exercise_dto_test.dart`
-- `test/usecases/ingestion_usecase_test.dart`
+- (All current test files are complete)
 
 ---
 
@@ -57,17 +55,18 @@
 
 ---
 
-## Phase 4: Memory Bank Documentation (PENDING)
-**Status:** ⏳ Pending
+## Phase 4: Memory Bank Documentation (IN PROGRESS)
+**Status:** 🔄 In Progress
 
 ### Tasks:
-- [ ] Update activeContext.md
-- [ ] Update systemPatterns.md
+- [x] Update activeContext.md
+- [x] Update systemPatterns.md
+- [x] Update progress.md
 - [ ] Document architecture decisions
 
 ---
 
 ## Notes
-- Analyzer issues resolved by wrapping type references in square brackets in doc comments
-- String extension renamed to `StringFirstCharUpperCase` with method `replaceFirstCharUpperCase()`
-- Clean build achieved with `flutter analyze` returning 0 issues
+- Analyzer issues resolved by removing unused imports and fixing doc comment syntax.
+- Architecture refactored to use `IngestionService` interface in the domain layer, improving testability and decoupling.
+- Clean build achieved with `flutter analyze` returning 0 issues.

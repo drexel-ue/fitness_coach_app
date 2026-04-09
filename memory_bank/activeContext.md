@@ -1,11 +1,11 @@
 # Active Context - Ingestion Feature
 
-**Date:** April 7, 2026
+**Date:** April 9, 2026
 **Data Source:** https://github.com/yuhonas/free-exercise-db
 
 ## Current State
 
-The ingestion feature implementation is approximately **80% complete**. All core functionality phases (1-4 and 6) are complete, with Phase 5 (UI Components) remaining.
+The ingestion feature implementation is approximately **90% complete**. Phase 1 (Infrastructure) and Phase 2 (Unit Testing) are complete. Phase 3 (UI Components) is the next major milestone.
 
 ## Architecture Overview
 
@@ -30,7 +30,7 @@ lib/
 │   ├── entities/
 │   │   └── exercise.dart              # Exercise entity
 │   └── repositories/
-│       └── exercise_repository.dart
+│   │   └── exercise_repository.dart
 ├── usecases/
 │   └── ingestion_usecase.dart         # Business logic use cases
 └── presentation/
@@ -65,27 +65,16 @@ lib/
 
 ## Known Issues
 
-### String Extension Import Issue
-
-**Problem:** The `replaceAllFirstCharUpperCase` extension in `lib/core/extensions/string_extensions.dart` is not being recognized by the Flutter analyzer.
-
-**Current Workaround:** The extension is defined in `lib/core/extensions/string_extensions.dart` but the import in `lib/data/dtos/exercise_dto.dart` is reported as unused.
-
-**Impact:** The `exercise_dto.dart` file uses this extension in the `_generateDescription()` method (line 88), but the analyzer reports it as undefined.
-
-**Status:** Investigation ongoing. May need to:
-- Define the extension inline in `exercise_dto.dart`
-- Check for Flutter/Dart analyzer caching issues
-- Verify the extension syntax is correct
+No major known issues. Analyzer warnings have been resolved.
 
 ## Future Roadmap
 
-### Phase 5: UI Components (Pending)
+### Phase 3: UI Components (Pending)
 - IngestionProgressDialog widget
 - IngestionScreen for user interaction
 - Local notification integration
 - Scaffold message integration
-- ExerciseImageCacheService widget
+- ExerciseImageCacheService
 
 ### Future Optimizations
 1. **Image Bundling:** Bundle exercise images with the app to reduce download time
@@ -95,17 +84,12 @@ lib/
 
 ## Testing Status
 
-- Unit tests structure exists in `test/data/services/ingestion_service_test.dart`
-- Tests need to be completed for:
-  - Exercise entity
-  - ExerciseDTO
-  - IngestionService
-  - IngestionUseCase
+- ✅ **Phase 2 (Unit Tests) is COMPLETE.**
+- All core ingestion components (Entity, DTO, Service, UseCase) have passing unit tests.
 
 ## Next Immediate Tasks
 
-1. Resolve String extension import issue
-2. Run `flutter analyze` to confirm clean build
-3. Complete unit tests for ingestion feature
-4. Create UI components for ingestion workflow
-5. Commit changes with conventional commit messages
+1. Begin Phase 3: UI Integration
+2. Implement `IngestionProgressDialog`
+3. Implement `IngestionScreen`
+4. Integrate local notifications for background ingestion progress
