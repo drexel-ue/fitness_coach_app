@@ -1,5 +1,5 @@
 # Context & VRAM Guardrails
-- **Max Context Budget:** 96K tokens.
+- **Max Context Budget:** 48K tokens.
 - **Search Limit:** Max 2 SearXNG queries per task. Summarize results immediately; do not keep full HTML in context.
 - **File Access:** Never read files >500 lines in full. Use `grep` or `sed` to read specific blocks/functions.
 - **Tool Efficiency:** If a tool output exceeds 2,000 tokens, truncate and ask me for a "read_slice" if necessary.
