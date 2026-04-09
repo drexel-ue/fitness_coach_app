@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:fitness_coach_app/core/extensions/iterable_extensions.dart';
 import 'package:fitness_coach_app/domain/entities/exercise.dart';
+import 'package:flutter/foundation.dart';
 
 /// Extension for string first character uppercase operations.
 extension StringFirstCharUpperCase on String {
@@ -51,11 +52,11 @@ class ExerciseDTO {
       level: json['level'] as String?,
       mechanic: json['mechanic'] as String?,
       equipment: json['equipment'] as String?,
-      primaryMuscles: _parseStringList(json['primaryMuscles']),
-      secondaryMuscles: _parseStringList(json['secondaryMuscles']),
-      instructions: _parseStringList(json['instructions']),
+      primaryMuscles: parseStringList(json['primaryMuscles']),
+      secondaryMuscles: parseStringList(json['secondaryMuscles']),
+      instructions: parseStringList(json['instructions']),
       category: json['category'] as String?,
-      images: _parseStringList(json['images']),
+      images: parseStringList(json['images']),
     );
   }
 
@@ -69,20 +70,20 @@ class ExerciseDTO {
     return Exercise(
       id: id,
       name: name,
-      description: _generateDescription(),
-      primaryMuscleGroup: _parseMuscleGroup(primaryMuscles.firstOrNull),
+      description: generateDescription(),
+      primaryMuscleGroup: parseMuscleGroup(primaryMuscles.firstOrNull),
       secondaryMuscleGroups: primaryMuscles
           .skip(1)
-          .map(_parseMuscleGroup)
-          .followedBy(secondaryMuscles.map(_parseMuscleGroup))
+          .map(parseMuscleGroup)
+          .followedBy(secondaryMuscles.map(parseMuscleGroup))
           .toList(),
-      equipment: _parseEquipment(equipment),
+      equipment: parseEquipment(equipment),
       instructions: instructions,
-      imageUrl: images.isNotEmpty ? _getImageUrl(0) : null,
-      force: _parseForce(force),
-      level: _parseLevel(level),
-      mechanic: _parseMechanic(mechanic),
-      category: _parseCategory(category),
+      imageUrl: images.isNotEmpty ? getImageUrl(0) : null,
+      force: parseForce(force),
+      level: parseLevel(level),
+      mechanic: parseMechanic(mechanic),
+      category: parseCategory(category),
       source: source,
       sourceId: sourceId ?? id,
       timestamp: timestamp,
@@ -91,7 +92,9 @@ class ExerciseDTO {
   }
 
   /// Generates a description from the exercise data.
-  String _generateDescription() {
+  /// This method is exposed for testing purposes.
+  @visibleForTesting
+  String generateDescription() {
     final equipmentStr = equipment != null
         ? equipment!.replaceAll('_', ' ').replaceFirstCharUpperCase()
         : 'no equipment';
@@ -102,14 +105,18 @@ class ExerciseDTO {
   }
 
   /// Returns the image URL for the given index.
-  String? _getImageUrl(int index) {
+  /// This method is exposed for testing purposes.
+  @visibleForTesting
+  String? getImageUrl(int index) {
     if (images.isEmpty || index >= images.length) return null;
     final imagePath = images[index];
     return 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/$imagePath';
   }
 
   /// Parses a list of strings from JSON.
-  static List<String> _parseStringList(dynamic value) {
+  /// This method is exposed for testing purposes.
+  @visibleForTesting
+  static List<String> parseStringList(dynamic value) {
     if (value == null) return [];
     if (value is List) {
       return value.whereType<String>().toList();
@@ -124,7 +131,10 @@ class ExerciseDTO {
     return [];
   }
 
-  static MuscleGroup _parseMuscleGroup(String? muscleName) {
+  /// Parses a muscle group name to MuscleGroup enum.
+  /// This method is exposed for testing purposes.
+  @visibleForTesting
+  static MuscleGroup parseMuscleGroup(String? muscleName) {
     if (muscleName == null || muscleName.isEmpty) return MuscleGroup.core;
     final normalizedName = muscleName.toLowerCase().replaceAll(' ', '');
     try {
@@ -138,7 +148,9 @@ class ExerciseDTO {
   }
 
   /// Parses equipment name to EquipmentType enum.
-  static EquipmentType _parseEquipment(String? equipmentValue) {
+  /// This method is exposed for testing purposes.
+  @visibleForTesting
+  static EquipmentType parseEquipment(String? equipmentValue) {
     if (equipmentValue == null || equipmentValue.isEmpty) {
       return EquipmentType.none;
     }
@@ -154,7 +166,9 @@ class ExerciseDTO {
   }
 
   /// Parses force type to Force enum.
-  static Force? _parseForce(String? forceValue) {
+  /// This method is exposed for testing purposes.
+  @visibleForTesting
+  static Force? parseForce(String? forceValue) {
     if (forceValue == null || forceValue.isEmpty) return null;
     try {
       return Force.values.firstWhereOrNull(
@@ -166,7 +180,9 @@ class ExerciseDTO {
   }
 
   /// Parses exercise level to ExerciseLevel enum.
-  static ExerciseLevel? _parseLevel(String? levelValue) {
+  /// This method is exposed for testing purposes.
+  @visibleForTesting
+  static ExerciseLevel? parseLevel(String? levelValue) {
     if (levelValue == null || levelValue.isEmpty) return null;
     try {
       return ExerciseLevel.values.firstWhereOrNull(
@@ -178,7 +194,9 @@ class ExerciseDTO {
   }
 
   /// Parses mechanic type to Mechanic enum.
-  static Mechanic? _parseMechanic(String? mechanicValue) {
+  /// This method is exposed for testing purposes.
+  @visibleForTesting
+  static Mechanic? parseMechanic(String? mechanicValue) {
     if (mechanicValue == null || mechanicValue.isEmpty) return null;
     try {
       return Mechanic.values.firstWhereOrNull(
@@ -190,7 +208,9 @@ class ExerciseDTO {
   }
 
   /// Parses category to ExerciseCategory enum.
-  static ExerciseCategory? _parseCategory(String? categoryValue) {
+  /// This method is exposed for testing purposes.
+  @visibleForTesting
+  static ExerciseCategory? parseCategory(String? categoryValue) {
     if (categoryValue == null || categoryValue.isEmpty) return null;
     final normalizedName = categoryValue.toLowerCase().replaceAll(' ', '');
     try {

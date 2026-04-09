@@ -16,6 +16,12 @@ class IngestionUseCase {
     return _ingestionService.ingestExercisesFromAsset(assetPath);
   }
 
+  /// Ingests exercises from a local file path.
+  /// Returns a [Stream<IngestionProgress>] for tracking progress.
+  Stream<IngestionProgress> ingestFromFile(String filePath) {
+    return _ingestionService.ingestExercisesFromFilePath(filePath);
+  }
+
   /// Ingests exercises from a remote URL.
   /// Returns a [Stream<IngestionProgress>] for tracking progress.
   Stream<IngestionProgress> ingestFromUrl(String url) {

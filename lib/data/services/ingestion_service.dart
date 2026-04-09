@@ -126,6 +126,65 @@ class IngestionService {
     }
   }
 
+  /// Ingests exercises from a local file path and saves them to the repository.
+  /// This is useful for testing or for ingesting exercises from files downloaded to the device.
+  Stream<IngestionProgress> ingestExercisesFromFilePath(
+    String filePath, {
+    int batchSize = 50,
+  }) async* {
+    int total = 0;
+    int completed = 0;
+    int failed = 0;
+
+    try {
+      final file = File(filePath);
+      if (!await file.exists()) {
+        yield IngestionProgress(
+          total: 0,
+          completed: 0,
+          failed: 1,
+          status: 'File not found: $filePath',
+        );
+        return;
+      }
+
+      final jsonString = await file.readAsString();
+      final dtos = await parseExercisesFromJson(jsonString);
+      total = dtos.length;
+
+      for (int i = 0; i < dtos.length; i += batchSize) {
+        final batch = dtos.skip(i).take(batchSize).toList();
+        final batchResults = await _ingestBatch(batch);
+
+        completed += batchResults.completed;
+        failed += batchResults.failed;
+
+        yield IngestionProgress(
+          total: total,
+          completed: completed,
+          failed: failed,
+          status: 'Processing batch ${i ~/ batchSize + 1}',
+        );
+      }
+
+      yield IngestionProgress(
+        total: total,
+        completed: completed,
+        failed: failed,
+        status: completed == total ? 'Completed' : 'Completed with errors',
+      );
+    } catch (e, stackTrace) {
+      debugPrint('Error ingesting exercises from file $filePath: $e');
+      debugPrint('Stack trace: $stackTrace');
+      yield IngestionProgress(
+        total: total,
+        completed: completed,
+        failed: failed + 1,
+        status: 'Error: $e',
+      );
+    }
+  }
+
   /// Ingests exercises from a remote URL and saves them to the repository.
   Stream<IngestionProgress> ingestExercisesFromUrl(
     String url, {
