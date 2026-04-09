@@ -135,16 +135,27 @@ class ExerciseDTO {
   /// This method is exposed for testing purposes.
   @visibleForTesting
   static MuscleGroup parseMuscleGroup(String? muscleName) {
-    if (muscleName == null || muscleName.isEmpty) return MuscleGroup.core;
-    final normalizedName = muscleName.toLowerCase().replaceAll(' ', '');
-    try {
-      return MuscleGroup.values.firstWhere(
-        (e) => e.name == normalizedName,
-        orElse: () => MuscleGroup.core,
-      );
-    } catch (_) {
-      return MuscleGroup.core;
+    if (muscleName == null || muscleName.isEmpty) {
+      throw ArgumentError('Muscle name cannot be null or empty');
     }
+
+    final normalizedName = muscleName.toLowerCase();
+
+    final muscleGroup = MuscleGroup.values.firstWhereOrNull((MuscleGroup group) {
+      if (group.name.contains(normalizedName)) {
+        return true;
+      }
+      if (normalizedName.contains(group.name)) {
+        return true;
+      }
+      return false;
+    });
+
+    if (muscleGroup == null) {
+      throw ArgumentError('Unknown muscle group: $muscleName');
+    }
+
+    return muscleGroup;
   }
 
   /// Parses equipment name to EquipmentType enum.
@@ -171,9 +182,7 @@ class ExerciseDTO {
   static Force? parseForce(String? forceValue) {
     if (forceValue == null || forceValue.isEmpty) return null;
     try {
-      return Force.values.firstWhereOrNull(
-        (e) => e.name == forceValue.toLowerCase(),
-      );
+      return Force.values.firstWhereOrNull((e) => e.name == forceValue.toLowerCase());
     } catch (_) {
       return null;
     }
@@ -185,9 +194,7 @@ class ExerciseDTO {
   static ExerciseLevel? parseLevel(String? levelValue) {
     if (levelValue == null || levelValue.isEmpty) return null;
     try {
-      return ExerciseLevel.values.firstWhereOrNull(
-        (e) => e.name == levelValue.toLowerCase(),
-      );
+      return ExerciseLevel.values.firstWhereOrNull((e) => e.name == levelValue.toLowerCase());
     } catch (_) {
       return null;
     }
@@ -199,9 +206,7 @@ class ExerciseDTO {
   static Mechanic? parseMechanic(String? mechanicValue) {
     if (mechanicValue == null || mechanicValue.isEmpty) return null;
     try {
-      return Mechanic.values.firstWhereOrNull(
-        (e) => e.name == mechanicValue.toLowerCase(),
-      );
+      return Mechanic.values.firstWhereOrNull((e) => e.name == mechanicValue.toLowerCase());
     } catch (_) {
       return null;
     }
@@ -214,12 +219,9 @@ class ExerciseDTO {
     if (categoryValue == null || categoryValue.isEmpty) return null;
     final normalizedName = categoryValue.toLowerCase().replaceAll(' ', '');
     try {
-      return ExerciseCategory.values.firstWhereOrNull(
-        (e) => e.name == normalizedName,
-      );
+      return ExerciseCategory.values.firstWhereOrNull((e) => e.name == normalizedName);
     } catch (_) {
       return null;
     }
   }
 }
-

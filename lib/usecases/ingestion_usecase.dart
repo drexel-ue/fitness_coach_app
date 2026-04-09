@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:fitness_coach_app/data/dtos/exercise_dto.dart';
-import 'package:fitness_coach_app/data/services/ingestion_service.dart';
 import 'package:fitness_coach_app/domain/entities/exercise.dart';
+import 'package:fitness_coach_app/domain/services/ingestion_service.dart';
 
 /// Use case for ingesting exercises from various sources.
 /// Provides progress tracking via [Stream<IngestionProgress>].
@@ -12,20 +12,20 @@ class IngestionUseCase {
 
   /// Ingests exercises from a bundled asset file.
   /// Returns a [Stream<IngestionProgress>] for tracking progress.
-  Stream<IngestionProgress> ingestFromAsset(String assetPath) {
-    return _ingestionService.ingestExercisesFromAsset(assetPath);
+  Stream<IngestionProgress> ingestFromAsset(String assetPath, {int batchSize = 50}) {
+    return _ingestionService.ingestExercisesFromAsset(assetPath, batchSize: batchSize);
   }
 
   /// Ingests exercises from a local file path.
   /// Returns a [Stream<IngestionProgress>] for tracking progress.
-  Stream<IngestionProgress> ingestFromFile(String filePath) {
-    return _ingestionService.ingestExercisesFromFilePath(filePath);
+  Stream<IngestionProgress> ingestFromFile(String filePath, {int batchSize = 50}) {
+    return _ingestionService.ingestExercisesFromFilePath(filePath, batchSize: batchSize);
   }
 
   /// Ingests exercises from a remote URL.
   /// Returns a [Stream<IngestionProgress>] for tracking progress.
-  Stream<IngestionProgress> ingestFromUrl(String url) {
-    return _ingestionService.ingestExercisesFromUrl(url);
+  Stream<IngestionProgress> ingestFromUrl(String url, {int batchSize = 50}) {
+    return _ingestionService.ingestExercisesFromUrl(url, batchSize: batchSize);
   }
 
   /// Ingests exercises from the free-exercise-db GitHub repository.
@@ -36,8 +36,8 @@ class IngestionUseCase {
 
   /// Ingests a list of ExerciseDTOs.
   /// Returns a [Stream<IngestionProgress>] for tracking progress.
-  Stream<IngestionProgress> ingestFromDtoList(List<ExerciseDTO> dtos) {
-    return _ingestionService.ingestExercisesFromDtoList(dtos);
+  Stream<IngestionProgress> ingestFromDtoList(List<ExerciseDTO> dtos, {int batchSize = 50}) {
+    return _ingestionService.ingestExercisesFromDtoList(dtos, batchSize: batchSize);
   }
 
   /// Downloads and caches an image for an exercise.
